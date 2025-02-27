@@ -1,6 +1,8 @@
 ---
 title: "Isolating Data"
 format: html
+author: Alyssa Walter
+date: 2/27/25
 execute: 
   echo: true
   message: false
@@ -33,7 +35,7 @@ babynames <- read_csv("babynames_500.csv")
 Alter the code to select just the `n` column:
 
 ```{r}
-select(babynames, name, prop)
+select(babynames, n)
 ```
 
 ## Quiz
@@ -46,6 +48,8 @@ select(babynames, name:n)
 select(babynames, starts_with("n"))
 select(babynames, ends_with("n"))
 ```
+select(babynames, ends_with("n")) will not select the n and name columns together.
+
 
 ## Your Turn 2
 
@@ -55,7 +59,9 @@ Use `filter`, `babynames`, and the logical operators to find:
 * All the years the name "Judith" appeared in the top 500 names.    
 
 ```{r}
+filter(babynames, prop <= 0.08)
 
+filter(babynames, name =="Judith")
 ```
 
 ## Your Turn 3
@@ -67,7 +73,11 @@ Use Boolean operators to return only the rows that contain:
 * Names that are one of Acura, Lexus, or Yugo
 
 ```{r}
+filter(babynames, sex == "M", name =="Sue")
 
+filter(babynames, n ==15| n==16 & year==1980)
+
+filter(babynames, name =="Acura" | name =="Lexus" | name=="Yugo")
 ```
 
 ## Help Me
@@ -76,7 +86,8 @@ What is the smallest value of n?
 What is the largest?
 
 ```{r}
-
+arrange(babynames, n)  #smallest value of n
+arrange(babynames, desc(n)) #largest value of n
 ```
 
 ## Your Turn 4
@@ -88,7 +99,10 @@ Use `%>%` or `|>` to write a sequence of functions that:
 3. Arranges the results so that the most popular names are near the top.
 
 ```{r}
-
+babynames%>%
+   filter(sex=="F" & year == 2023)%>%
+  select(name, n)%>%
+  arrange(n)
 
 ```
 
@@ -102,8 +116,17 @@ Use `%>%` or `|>` to write a sequence of functions that:
 
 ```{r}
 
+babynames%>%
+  filter(name =="Alyssa" & sex =="F")%>%
+  select(year, prop)%>%
+  ggplot(aes(x = year, y = prop))+
+  geom_line(size = 1)+
+  labs(title = "Proportion of Babies named Alyssa Over Time",
+       x = "Time (years)",
+       y = "Proportion of Babies")+
+theme_light()
 
-
+ggsave("alyssa.png")
 ```
 
 
@@ -126,8 +149,6 @@ babynames %>%
        title = "Popularity of \"Jordan\" in the US Since 1880") +
   theme_light()
 ```
-
-
 
 
 
